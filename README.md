@@ -1,65 +1,69 @@
-# 阿里云盘小白羊版v3修复版
+# 阿里云盘小白羊版v3 Mac版
+#### 使用说明
+由于macOS版本内置的Aria2有问题，因此需要在使用前自行安装Aria2并配置。  
+
+1. 使用Homebrew安装aria2。
+```bash
+brew install aria2
+```
+2. 创建Aria2配置文件。
+```bash
+cd ~
+mkdir .aria2
+cd .aria2
+vi aria2.conf
+```
+3. 填入以下配置文件
+```
+log-level=error
+file-allocation=trunc
+user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36
+max-concurrent-downloads=64
+max-connection-per-server=16
+enable-rpc=true
+rpc-allow-origin-all=true
+rpc-listen-all=false
+rpc-listen-port=16800
+rpc-secret=S4znWTaZYQi3cpRNb
+rpc-secure=false
+pause-metadata=true
+http-no-cache=true
+disk-cache=32M
+continue=true
+allow-overwrite=true
+auto-file-renaming=false
+max-download-result=1000
+no-netrc=true
+reuse-uri=true
+quiet=true
+disable-ipv6=false
+check-certificate=false
+save-session=
+save-session-interval=0
+follow-metalink=false
+follow-torrent=false
+enable-dht=false
+enable-dht6=false
+bt-enable-lpd=false
+enable-peer-exchange=false
+bt-request-peer-speed-limit=1
+dht-file-path=
+dht-file-path6=
+seed-time=0
+force-save=false
+bt-save-metadata=false
+```
+4. 启动Aria2。
+```bash
+aria2c --conf-path="/Users/xxxx/.aria2/aria2.conf" -D
+```
+
+**缺点是每次重启之后可能需要重新启动Aria2，你也可以自行加入开机自启动，会麻烦一些。**
+
 
 #### 项目说明
-
+[阿里云盘小白羊版v3修复版 by odomu](https://github.com/odomu/aliyunpan)
+<br>
 [阿里云盘小白羊版v3的延续版 by PingKuNet](https://github.com/PingKuNet/aliyunpan)
 <br>
 [原阿里云盘小白羊版v3 by aliyunpan](https://github.com/liupan1890/aliyunpan)
-
-基于阿里云盘网页版开发的PC客户端，支持win7-11，macOS，linux
-
-
-
-#### 为什么要用小白羊？
-
-#### 一：因为更快
-
-##### 上传和下载4.4万个json格式小文件（共24GB）:	
-
-| 程序 | 总用时 | 用时基准 |
-| --- | ---: | ---: |
-| 上传&小白羊版 v2.10 | 24分钟 | :zap:58% |
-| 上传&PC客户端 v2.2.6 | 41分钟 | 100% |
-|  ... |  |  |  |  |
-| 下载&小白羊版 v2.10 | 25分钟 | :zap:42% |
-| 下载&PC客户端 v2.2.6  | 59分钟 | 100% |
-
-
-##### 上传和下载33个大文件（共90GB）:
-
-| 程序 | 总用时 | 用时基准 |
-| --- | ---: | ---: |
-| 上传&小白羊版 v2.10 | 1分10秒 | :zap:44% |
-| 上传&PC客户端 v2.2.6 | 2分40秒 | 100% |
-|  ... |  |  |  |  |
-| 下载&小白羊版 v2.10 | 38分钟 | :zap:52% |
-| 下载&PC客户端 v2.2.6 | 72分钟 | 100% |
-
-详情参阅 ：[v2.10.19性能测试](https://github.com/liupan1890/aliyunpan/blob/main/v2.10.19%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95.md) 的性能测试文档
-
-#### 二：因为更好
-
-小白羊支持同时登录多个账号管理
-
-小白羊特有文件夹树，可以快速方便的操作
-
-小白羊支持直接在线播放网盘里的各种格式的视频并且是高清原画，支持外挂字幕/音轨/播放速度调整，比官方的格式更多更清晰
-
-小白羊可以显示文件夹体积，可以文件夹和文件混合排序(文件名/体积/时间)，并且文件名排序时更准确！
-
-小白羊可以通过远程Aria2功能把文件直接下载到远程的VPS/NAS上
-
-小白羊可以批量的对 大量文件/多层嵌套的文件夹 一键重命名
-
-小白羊可以快速复制文件，可以直接预览视频的雪碧图，可以直接删除文件
-
-小白羊支持数万文件夹和数万文件的管理，支持一次性列出文件夹里包含的全部文件
-
-小白羊支持单次上传/下载 一百万 量级的文件/文件夹
-
-小白羊仍在努力开发新功能，让大家使用起来更方便！
-
-#### 特别感谢 @jkqxl @iD2073 @ybbluesky 等为小白羊提供了大量的优化建议
-
-
-
