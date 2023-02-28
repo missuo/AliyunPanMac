@@ -1,5 +1,5 @@
 # 阿里云盘小白羊版v3 Mac版
-#### 使用说明
+## 使用说明
 由于macOS版本内置的Aria2有问题，因此需要在使用前自行安装Aria2并配置。  
 
 1. 使用Homebrew安装aria2。
@@ -61,7 +61,7 @@ aria2c --conf-path="/Users/xxxx/.aria2/aria2.conf" -D
 **缺点是每次重启之后可能需要重新启动Aria2，你也可以自行加入开机自启动，会麻烦一些。**
 
 
-#### 项目说明
+## 项目说明
 [阿里云盘小白羊版v3修复版 by odomu](https://github.com/odomu/aliyunpan)
 <br>
 [阿里云盘小白羊版v3的延续版 by PingKuNet](https://github.com/PingKuNet/aliyunpan)
