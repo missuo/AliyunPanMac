@@ -8,8 +8,9 @@ import { app, BrowserWindow, dialog, Menu, MenuItem, ipcMain, shell, session } f
 import { exec, spawn } from 'child_process'
 import { existsSync, readFileSync, writeFileSync } from 'fs'
 import path from 'path'
+import fixPath from 'fix-path';
 
-
+fixPath();
 if (release().startsWith('6.1')) app.disableHardwareAcceleration()
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
@@ -539,7 +540,7 @@ async function creatAria() {
       ],
       options
     )
-    subprocess.unref()
+    // subprocess.unref()
     return port
   } catch (e: any) {
     console.log(e)
