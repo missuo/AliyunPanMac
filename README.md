@@ -1,6 +1,6 @@
 # 阿里云盘小白羊版v3 Mac版
 ## 使用说明
-已修复Mac上存在的Aria2无法启动的问题。
+已修复Mac上存在的内置Aria2无法启动的问题，无需自行额外配置Aria2。安装即用！
 
 ## 项目说明
 [阿里云盘小白羊版v3修复版 by odomu](https://github.com/odomu/aliyunpan)
