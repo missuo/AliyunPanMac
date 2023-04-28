@@ -1,6 +1,6 @@
 {
   "appId": "com.alixby.app",
-  "productName": "阿里云盘",
+  "productName": "alixby",
   "copyright": "copyright ©2023 Odomu",
   "artifactName": "${productName}v${version}-${arch}.${ext}",
   "asar": true,
