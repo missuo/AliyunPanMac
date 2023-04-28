@@ -1,5 +1,11 @@
 # 阿里云盘小白羊版v3修复版
 
+## 安装
+```bash
+brew tap owo-network/brew
+brew install alixby
+```
+
 #### 项目说明
 
 [阿里云盘小白羊版v3的延续版 by PingKuNet](https://github.com/PingKuNet/aliyunpan)
