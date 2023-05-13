@@ -25,7 +25,7 @@ export default class AliUser {
     }
     SessionLockMap.set(token.user_id, Date.now())
     const time = SessionReTimeMap.get(token.user_id) || 0
-    if (Date.now() - time < 1000) {
+    if (Date.now() - time < 1000 * 60) {
       SessionLockMap.delete(token.user_id)
       return true
     }
@@ -116,19 +116,16 @@ export default class AliUser {
 
 
   static async OpenApiTokenRefreshAccount(token: ITokenInfo, showMessage: boolean): Promise<boolean> {
-    if (!token.open_api_refresh_token) {
-      message.error('OpenApiRefreshToken不能为空，请检查配置')
-      return false
-    }
+    if (!token.open_api_refresh_token) return false
     while (true) {
       const lock = OpenApiTokenLockMap.has(token.user_id)
       if (lock) await Sleep(1000)
       else break
     }
-    TokenLockMap.set(token.user_id, Date.now())
+    OpenApiTokenLockMap.set(token.user_id, Date.now())
     const time = OpenApiTokenReTimeMap.get(token.user_id) || 0
     if (Date.now() - time < 1000 * 60 * 3) {
-      TokenLockMap.delete(token.user_id)
+      OpenApiTokenLockMap.delete(token.user_id)
       return true
     }
     let url = 'https://open.aliyundrive.com/oauth/access_token'
@@ -264,32 +261,43 @@ export default class AliUser {
     return false
   }
 
-  static async ApiUserSign(token: ITokenInfo): Promise<boolean> {
-    if (!token.user_id) return false
-    const url = 'https://member.aliyundrive.com/v1/activity/sign_in_list'
-    const resp = await AliHttp.Post(url, {}, token.user_id, '')
+  static async ApiUserSign(token: ITokenInfo): Promise<number> {
+    if (!token.user_id) return -1
+    const signUrl = 'https://member.aliyundrive.com/v1/activity/sign_in_list'
+    const signResp = await AliHttp.Post(signUrl, {}, token.user_id, '')
     // console.log(JSON.stringify(resp))
-    if (AliHttp.IsSuccess(resp.code)) {
-      if (!resp.body || !resp.body.result) {
-        message.error("签到失败" + resp.body?.message)
-        return false
+    if (AliHttp.IsSuccess(signResp.code)) {
+      if (!signResp.body || !signResp.body.result) {
+        message.error("签到失败" + signResp.body?.message)
+        return -1
       }
       let sign_data
-      const { title, signInCount = 0, signInLogs = [] } = resp.body.result
+      const { title, signInCount = 0, signInLogs = [] } = signResp.body.result
       for (let i = 0; i < signInLogs.length - 1; i++) {
           if (signInLogs[i]['status'] === 'miss') {
             sign_data = signInLogs[i - 1]
             break
          }
       }
-      const reward = !sign_data['isReward'] ? '无奖励' : `获得${sign_data["reward"]["name"]} ${sign_data["reward"]["description"]}`
-      message.success("签到成功, 本月累计签到" + signInCount + '次')
-      message.info("本次签到" + reward)
-      return true
+      let reward = '无奖励'
+      if (sign_data['type'] !== 'luckyBottle') {
+        const rewardUrl = 'https://member.aliyundrive.com/v1/activity/sign_in_reward'
+        const rewardResp = await AliHttp.Post(rewardUrl, { signInDay: signInCount }, token.user_id, '')
+        if (AliHttp.IsSuccess(rewardResp.code)) {
+          if (!rewardResp.body || !rewardResp.body.result || !rewardResp.body.success) {
+            message.error('签到后领取奖励失败，请前往手机端领取' + rewardResp.body?.message)
+            return -1
+          }
+          const result = rewardResp.body.result
+          reward = `获得【${result["name"]}】 - ${result["description"]}`
+        }
+      }
+      message.info(`本月累计签到${signInCount}次，本次签到 ${reward}`)
+      return signInCount
     } else {
-      message.error("签到失败" + resp.body?.message)
+      message.error("签到失败" + signResp.body?.message)
     }
-    return false
+    return -1
   }
 
 

@@ -29,26 +29,6 @@ const cb = (val: any) => {
                 return
             }
         }
-        if (val.uiOpenApiAccessToken !== '') {
-            UserDAL.GetUserTokenFromDB(useUserStore().user_id).then((token) => {
-                if (!token) {
-                    message.info('未登录账号，该功能无法开启')
-                    return
-                }
-                token.open_api_access_token = val.uiOpenApiAccessToken
-                UserDAL.SaveUserToken(token)
-            })
-        }
-        if (val.uiOpenApiRefreshToken !== '') {
-            UserDAL.GetUserTokenFromDB(useUserStore().user_id).then((token) => {
-                if (!token) {
-                    message.info('未登录账号，该功能无法开启')
-                    return
-                }
-                token.open_api_refresh_token = val.uiOpenApiRefreshToken
-                UserDAL.SaveUserToken(token)
-            })
-        }
     }
     settingStore.updateStore(val)
 }
@@ -158,7 +138,7 @@ const refreshQrCode = async () => {
                     </div>
                 </template>
             </a-popover>
-            <template v-if="settingStore.uiEnableOpenApi">
+            <div v-show="settingStore.uiEnableOpenApi">
                 <div class="settingspace"></div>
                 <a-radio-group v-show="settingStore.uiEnableOpenApi" type="button" tabindex="-1" :model-value="settingStore.uiOpenApi" @update:model-value="cb({ uiOpenApi: $event })">
                     <a-radio tabindex="-1" value="inputToken">手动输入</a-radio>
@@ -249,7 +229,7 @@ const refreshQrCode = async () => {
                                     allow-clear/>
                     </div>
                 </template>
-            </template>
+            </div>
         </div>
     </div>
 </template>

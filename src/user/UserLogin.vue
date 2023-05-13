@@ -2,7 +2,7 @@
 import { defineComponent } from 'vue'
 import { useUserStore, ITokenInfo } from '../store'
 import UserDAL from '../user/userdal'
-import Config from '../utils/config'
+import Config from '../config'
 import message from '../utils/message'
 import DebugLog from '../utils/debuglog'
 import { GetSignature } from '../aliapi/utils'
@@ -77,6 +77,7 @@ export default defineComponent({
             tokenfrom: 'account' ,
             access_token: result.accessToken,
             refresh_token: result.refreshToken,
+            open_api_enable: false,
             open_api_access_token: '',
             open_api_refresh_token: '',
             expires_in: result.expiresIn,

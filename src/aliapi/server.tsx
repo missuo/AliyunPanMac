@@ -1,6 +1,6 @@
 import { B64decode, b64decode } from '../utils/format'
 import axios, { AxiosResponse } from 'axios'
-import Config from '../utils/config'
+import Config from '../config'
 import message from '../utils/message'
 import { IShareSiteModel, useServerStore } from '../store'
 import { Modal } from '@arco-design/web-vue'

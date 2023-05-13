@@ -216,6 +216,27 @@ ipcMain.on('WebToElectron', (event, data) => {
     if (menuEdit) menuEdit.popup()
   } else if (data.cmd && data.cmd === 'menucopy') {
     if (menuCopy) menuCopy.popup()
+  } else if (data.cmd && (Object.hasOwn(data.cmd, 'launchStart')
+      || Object.hasOwn(data.cmd, 'launchStartShow'))) {
+    const launchStart = data.cmd.launchStartUp
+    const launchStartShow = data.cmd.launchStartUpShow
+    const appName = path.basename(process.execPath)
+    // 设置开机自启
+    const settings: Electron.Settings = {
+      openAtLogin: launchStart,
+      path: process.execPath
+    }
+    // 显示主窗口
+    if (process.platform === 'darwin') {
+      settings.openAsHidden = !launchStartShow
+    } else {
+      settings.args = [
+        '--processStart', `${appName}`,
+        '--process-start-args', `"--hidden"`
+      ]
+      !launchStartShow && settings.args.push('--openAsHidden')
+    }
+    app.setLoginItemSettings(settings)
   } else {
     event.sender.send('ElectronToWeb', 'mainsenddata')
   }
@@ -524,7 +545,7 @@ async function creatAria() {
     } else {
       ariaPath = 'aria2c'
     }
-    basePath = path.join(basePath, DEBUGGING ? process.platform : '')
+    basePath = path.join(basePath, DEBUGGING ? path.join(process.platform, process.arch): '')
     let ariaFullPath = path.join(basePath, ariaPath)
     if (!existsSync(ariaFullPath)) {
       ShowError('找不到Aria程序文件', ariaFullPath)
@@ -534,11 +555,11 @@ async function creatAria() {
     const options:SpawnOptions = { cwd: basePath, shell: true, windowsVerbatimArguments: true }
     const port = await portIsOccupied(16800)
     const subprocess = execFile(
-        ariaFullPath,
+       '\"'+ ariaFullPath + '\"',
       [
         '--stop-with-process=' + process.pid,
         '-D',
-        '--conf-path=' + confPath,
+        '--conf-path=' + '\"'+ confPath + '\"',
         '--rpc-listen-port=' + port
       ],
       options,

@@ -14,7 +14,7 @@ export default defineComponent({
     istree: {
       type: Boolean,
       required: true
-    }
+    },
   },
   setup(props) {
     const okLoading = ref(false)
@@ -31,7 +31,7 @@ export default defineComponent({
     }
 
     const handleOK = () => {
-      menuDownload(props.istree)
+      menuDownload(props.istree, true)
       modalCloseAll()
     }
 

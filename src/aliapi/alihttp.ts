@@ -39,11 +39,10 @@ function HttpCodeBreak(code: number): Boolean {
   if (code >= 200 && code <= 300) return true
   if (code == 400) return true
   // if (code == 401) return true
-  if (code >= 402 && code <= 428) return true
+  if (code >= 402 && code <= 429) return true
   // if (code == 403) return true
   if (code == 404) return true
   if (code == 409) return true
-  if (code == 429) return true
   return false
 }
 
@@ -107,6 +106,10 @@ export default class AliHttp {
                 })
               }
               if (useSettingStore().uiEnableOpenApi) {
+                if (!useSettingStore().uiOpenApiRefreshToken) {
+                  message.error('自动刷新账号[' + token.user_name + '] OpenApiToken 失败, 请检查配置')
+                  return { code: 402, header: '', body: 'OpenApiRefreshToken失效或未填写，请获取后填入' } as IUrlRespData
+                }
                 return await AliUser.OpenApiTokenRefreshAccount(token, true).then((isLogin: boolean) => {
                   return { code: 401, header: '', body: 'OpenApiRefreshToken失效或未填写，请获取后填入' } as IUrlRespData
                 })
@@ -117,6 +120,7 @@ export default class AliHttp {
           }
 
           if (data.code == 'Too Many Requests') {
+            message.error('获取OpenApiAccessToken失败，请勿重复请求')
             return { code: 429, header: '', body: '获取OpenApiAccessToken失败，请勿重复请求' } as IUrlRespData
           }
 
@@ -126,7 +130,7 @@ export default class AliHttp {
               || data.code == 'DeviceSessionSignatureInvalid') {
             if (token) {
               return await AliUser.ApiSessionRefreshAccount(token,  true).then((isLogin: boolean) => {
-                return { code: 403, header: '', body: '刷新Session失败' } as IUrlRespData
+                return { code: 401, header: '', body: '刷新Session失败' } as IUrlRespData
               })
             } else {
               return { code: 402, header: '', body: 'NetError 账号需要重新登录' } as IUrlRespData

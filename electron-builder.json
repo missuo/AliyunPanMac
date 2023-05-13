@@ -2,22 +2,18 @@
   "appId": "com.alixby.app",
   "productName": "alixby",
   "copyright": "copyright ©2023 Odomu",
-  "artifactName": "${productName}v${version}-${arch}.${ext}",
   "asar": true,
-  "compression": "normal",
-  "directories": {
-    "output": "release"
-  },
-  "files": [
-    "dist"
-  ],
+  "compression": "maximum",
+  "directories": { "output": "release" },
+  "files": [ "dist" ],
   "mac": {
     "type": "distribution",
+    "artifactName": "${productName}-${version}-mac-${arch}.${ext}",
     "darkModeSupport": true,
     "hardenedRuntime": true,
     "category": "public.app-category.utilities",
     "extraResources": [
-      { "from": "./static/engine/darwin", "to": "./engine"},
+      { "from": "./static/engine/darwin/${arch}", "to": "./engine" },
       { "from": "./static/engine/aria2.conf", "to": "./engine/aria2.conf"},
       { "from": "./static/crx", "to": "./crx"},
       { "from": "./app.ico", "to": "."},
@@ -29,39 +25,54 @@
   },
   "linux": {
     "category": "Network",
+    "artifactName": "${productName}-${version}-linux-${arch}.${ext}",
     "extraResources": [
-      { "from": "./static/engine/linux", "to": "./engine"},
-      { "from": "./static/engine/aria2.conf", "to": "./engine/aria2.conf"},
-      { "from": "./static/crx", "to": "./crx"},
-      { "from": "./app.ico", "to": "."},
-      { "from": "./app.png", "to": "."}
-    ],
-    "target": [ "AppImage" ]
-  },
-  "win": {
-    "icon": "./app.ico",
-    "extraResources": [
-      { "from": "./static/engine/win32", "to": "./engine"},
+      { "from": "./static/engine/linux/${arch}", "to": "./engine"},
       { "from": "./static/engine/aria2.conf", "to": "./engine/aria2.conf"},
       { "from": "./static/crx", "to": "./crx"},
       { "from": "./app.ico", "to": "."},
       { "from": "./app.png", "to": "."}
     ],
     "target": [
-      { "target": "nsis", "arch": [ "x64" ] }
+      { "target": "AppImage", "arch": [  "x64", "arm64", "armv7l" ] },
+      { "target": "deb", "arch": [ "x64",  "arm64", "armv7l" ] }
+    ]
+  },
+  "win": {
+    "icon": "./app.ico",
+    "artifactName": "${productName}-${version}-win-${arch}.${ext}",
+    "extraResources": [
+      { "from": "./static/engine/win32/${arch}", "to": "./engine"},
+      { "from": "./static/engine/aria2.conf", "to": "./engine/aria2.conf"},
+      { "from": "./static/crx", "to": "./crx"},
+      { "from": "./app.ico", "to": "."},
+      { "from": "./app.png", "to": "."}
+    ],
+    "target": [
+      { "target": "nsis", "arch": [ "x64", "ia32" ] },
+      { "target": "portable", "arch": [ "x64", "ia32" ] }
     ]
   },
   "dmg": {
     "window": { "width": 540, "height": 380 },
     "contents": [
-      {  "x": 410, "y": 230, "type": "link", "path": "/Applications" },
+      { "x": 410, "y": 230, "type": "link", "path": "/Applications" },
       { "x": 130, "y": 230, "type": "file" }
     ]
   },
+  "portable": {
+    "artifactName": "${productName}-Portable-${version}-${arch}.${ext}"
+  },
   "nsis": {
     "oneClick": false,
-    "perMachine": false,
+    "artifactName": "${productName}-Setup-${version}.${ext}",
     "allowToChangeInstallationDirectory": true,
     "deleteAppDataOnUninstall": false
-  }
+  },
+  "publish": [
+    {
+      "provider": "github",
+      "releaseType": "release"
+    }
+  ]
 }
